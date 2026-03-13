@@ -11,7 +11,13 @@ from model import Word2VecModel
 
 
 def save_model(model: Word2VecModel, output_dir: str | Path) -> None:
-    """Save embedding matrices to a directory."""
+    """Save embedding matrices to a directory.
+
+    Files written:
+        w_in.npy: Input (center) embeddings with shape
+            ``(vocab_size, embedding_dim)``.
+        w_out.npy: Output (context) embeddings with the same shape.
+    """
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     np.save(out_dir / "w_in.npy", model.w_in)
@@ -27,7 +33,12 @@ def load_model(output_dir: str | Path) -> Word2VecModel:
 
 
 def save_vocab(token_to_id: dict[str, int], output_dir: str | Path) -> None:
-    """Save vocab mapping to a directory."""
+    """Save vocab mapping to a directory.
+
+    The mapping is always written as ``token_to_id.json`` inside
+    ``output_dir`` so that :mod:`infer` and other consumers can load it
+    consistently.
+    """
     out_dir = Path(output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "token_to_id.json").write_text(

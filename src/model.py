@@ -9,7 +9,17 @@ import numpy as np
 
 @dataclass
 class Word2VecModel:
-    """Embeddings and update logic for skip-gram with negative sampling."""
+    """Embeddings and update logic for skip-gram with negative sampling.
+
+    The training objective for a single center word id ``c`` and positive
+    context id ``o`` with negative ids ``n_1, ..., n_k`` is
+
+        L = -log σ(v_c · v_o) - Σ_j log σ(-v_c · v_{n_j}),
+
+    where ``σ`` is the sigmoid, ``v_c`` is the row of ``w_in`` for the
+    center id and ``v_o`` / ``v_{n_j}`` are rows of ``w_out``. Gradients
+    are implemented explicitly in :meth:`train_step`.
+    """
 
     w_in: np.ndarray
     w_out: np.ndarray
@@ -34,6 +44,21 @@ class Word2VecModel:
         lr: float,
     ) -> float:
         """Update embeddings for a single (center, context) pair.
+
+        This implements one stochastic gradient step on the standard
+        skip-gram with negative sampling loss::
+
+            L = -log σ(v_c · v_o) - Σ_j log σ(-v_c · v_{n_j}),
+
+        where the gradient factors follow the usual identities
+        ``∂L_pos/∂(v_c · v_o) = σ(v_c · v_o) - 1`` for the positive pair
+        and ``∂L_neg/∂(v_c · v_n) = σ(v_c · v_n)`` for each negative id.
+
+        Args:
+            center_id: Integer id of the center token.
+            context_id: Integer id of the positive context token.
+            negative_ids: Array of negative context ids (may be empty).
+            lr: Learning rate used for the in-place SGD update.
 
         Returns:
             loss: float

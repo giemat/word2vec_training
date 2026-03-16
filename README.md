@@ -3,8 +3,6 @@ JetBrains Hallucination Detection Task
 
 Implement the core training loop of word2vec in pure NumPy (no PyTorch / TensorFlow or other ML frameworks). The project implements a standard skip-gram with negative sampling variant on top of NLTK data, with a small but complete training and evaluation pipeline.
 
-For a detailed walkthrough of the modules and CLI options, see `USAGE.md`. The sections below summarize how to get started quickly.
-
 ## Quick Start
 
 ### 1) Install dependencies and NLTK data
@@ -72,8 +70,6 @@ The main entry point is `src/run.py`. Common patterns:
   ```bash
   python src/run.py --queries government,market,bank --top-k 10
   ```
-
-For more details, including a module-by-module overview, refer to `USAGE.md`.
 
 ## Inference Only (using saved embeddings)
 
